@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://iaq2bvs7in8t"]
+
+[ext_resource type="Script" path="res://actors/items/pickables/weapon_pickable.gd" id="1_qr00n"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mvggd"]
+
+[node name="weapon" type="Node2D"]
+script = ExtResource("1_qr00n")
+
+[node name="playerdetector" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="playerdetector"]
+shape = SubResource("CircleShape2D_mvggd")
+
+[connection signal="area_entered" from="playerdetector" to="." method="_on_playerdetector_area_entered"]
+[connection signal="area_exited" from="playerdetector" to="." method="_on_playerdetector_area_exited"]

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://ca5mpesux85t8"]
+
+[ext_resource type="PackedScene" uid="uid://iaq2bvs7in8t" path="res://actors/items/pickables/weapon_pickable.tscn" id="1_1380n"]
+[ext_resource type="Texture2D" uid="uid://btn8rx6i25npe" path="res://actors/items/img/pistol.png" id="2_q2nd6"]
+
+[node name="weapon" instance=ExtResource("1_1380n")]
+Weapon = 1
+
+[node name="sprite" type="Sprite2D" parent="." index="1"]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_q2nd6")

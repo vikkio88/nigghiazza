@@ -1,0 +1,107 @@
+[gd_scene load_steps=10 format=3 uid="uid://6kayd1ghj20y"]
+
+[ext_resource type="Script" path="res://actors/player/player.gd" id="1_0iwpp"]
+[ext_resource type="Texture2D" uid="uid://c4pmmws6m0ivw" path="res://actors/player/characterslim.png" id="1_eqswm"]
+[ext_resource type="AudioStream" uid="uid://w4ptu8f1f02b" path="res://assets/sounds/footstep_concrete.wav" id="3_w1ubu"]
+[ext_resource type="Script" path="res://actors/player/hand.gd" id="4_c1m3t"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ev744"]
+radius = 4.0
+height = 22.0
+
+[sub_resource type="Animation" id="Animation_aaayx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [3.48787e-16]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("footstep:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_lh7y1"]
+resource_name = "move"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [-0.0872665, 0.0872665, 3.48787e-16]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("footstep:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_d52rw"]
+_data = {
+"RESET": SubResource("Animation_aaayx"),
+"move": SubResource("Animation_lh7y1")
+}
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4v2pf"]
+radius = 18.5
+
+[node name="player" type="CharacterBody2D"]
+scale = Vector2(2, 2)
+script = ExtResource("1_0iwpp")
+
+[node name="sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_eqswm")
+
+[node name="collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("CapsuleShape2D_ev744")
+
+[node name="anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_d52rw")
+}
+
+[node name="hand" type="Node2D" parent="."]
+position = Vector2(2, 2.08165e-12)
+script = ExtResource("4_c1m3t")
+
+[node name="ftPh" type="Node2D" parent="."]
+position = Vector2(0, -15.5)
+
+[node name="interactable_detector" type="Area2D" parent="."]
+
+[node name="collider" type="CollisionShape2D" parent="interactable_detector"]
+position = Vector2(0, -4.5)
+shape = SubResource("CircleShape2D_4v2pf")
+
+[node name="footstep" type="AudioStreamPlayer2D" parent="."]
+scale = Vector2(0.5, 0.5)
+stream = ExtResource("3_w1ubu")
