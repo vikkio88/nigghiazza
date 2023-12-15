@@ -1419,8 +1419,13 @@ layer_0/tile_data = PackedInt32Array(-589840, 458752, 25, -524304, 458752, 24, -
 
 [node name="pickable_layer" type="Node2D" parent="."]
 
-[node name="weapon" parent="pickable_layer" instance=ExtResource("3_fhmop")]
+[node name="m4" parent="pickable_layer" instance=ExtResource("3_fhmop")]
 position = Vector2(336, 121)
+Ammo = 30
+
+[node name="pistol" parent="pickable_layer" instance=ExtResource("5_saewu")]
+position = Vector2(338, 274)
+Ammo = 5
 
 [node name="player" parent="." instance=ExtResource("1_4arqk")]
 position = Vector2(214, 125)
@@ -1428,6 +1433,3 @@ position = Vector2(214, 125)
 [node name="Hud" parent="player" instance=ExtResource("2_f6t6v")]
 
 [node name="Camera2D" type="Camera2D" parent="player"]
-
-[node name="weapon" parent="." instance=ExtResource("5_saewu")]
-position = Vector2(338, 274)

@@ -18,7 +18,8 @@ var BPM: float = 1.0
 
 var _ammo: int = 5
 var _is_aiming: bool = false
-var _can_fire = true
+var _is_shooting: bool = false
+var _is_inspecting: bool = false
 var _is_reloading = false
 var _is_ads = false
 
@@ -37,9 +38,9 @@ func gun_orientation():
 		Sprite.set_flip_v(false)
 
 func shoot() -> Vector2:
-	if !_can_fire:
+	if !_can_fire():
 		return Vector2.ZERO
-	_can_fire = false
+	_is_shooting = true
 	Anim.speed_scale = BPM
 	ShotSnd.set_pitch_scale(randf_range(1.8, 2.2))
 	var b: Node2D = bullet.instantiate()
@@ -47,6 +48,7 @@ func shoot() -> Vector2:
 	get_tree().get_root().add_child(b)
 	b.shoot(Bullet_Speed, Base_Damage, _is_ads)
 	Anim.play("shoot")
+	_post_shoot()
 	
 	var vertical_recoil = 2 *Recoil_Multiplier.y
 	if _is_ads:
@@ -56,11 +58,22 @@ func shoot() -> Vector2:
 			-randi_range(0, vertical_recoil)
 	)
 
-func reset_can_fire() -> void:
-	_can_fire = true
+func reset() -> void:
+	_is_shooting = false
 
 func ads_on() -> void:
 	_is_ads = true
 	
 func ads_off() -> void:
 	_is_ads = false
+	
+func set_ammo(ammo: int) -> void:
+	_ammo = ammo
+
+func _post_shoot() -> void:
+	_ammo -= 1
+	print_debug(_ammo)
+
+func _can_fire() -> bool:
+	print_debug(_is_shooting, _ammo, _is_inspecting, _is_reloading)
+	return !_is_shooting && _ammo > 0 && !_is_inspecting && !_is_reloading

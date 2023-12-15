@@ -44,15 +44,14 @@ func pick_gun(type: Enums.Weapons, ammo: int) -> void:
 		drop_gun()
 	
 	var weapon = ItemFactory.make_weapon(type).instantiate()
+	weapon.set_ammo(ammo)
 	add_child(weapon)
 	gun = weapon
 
 func drop_gun():
-	EventBus.gun_dropped.emit(gun.Type, global_position, 25)
+	EventBus.gun_dropped.emit(gun.Type, global_position, gun._ammo)
 	gun.queue_free()
 	gun = null
-
-
 
 func is_action_shooting() -> bool:
 	if !has_gun():
