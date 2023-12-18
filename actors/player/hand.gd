@@ -22,6 +22,12 @@ func _process(delta: float) -> void:
 	
 	if Input.is_action_just_released("action_b") and has_gun():
 		drop_gun()
+	
+	if Input.is_action_just_pressed("inspect") and has_gun():
+		gun.inspect()
+	
+	if Input.is_action_just_pressed("reload") and has_gun():
+		gun.reload()
 
 func _physics_process(delta: float) -> void:
 	if get_global_mouse_position().distance_to(global_position) < 70:

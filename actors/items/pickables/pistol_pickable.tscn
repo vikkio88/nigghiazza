@@ -7,5 +7,5 @@
 Weapon = 1
 
 [node name="sprite" type="Sprite2D" parent="." index="1"]
-scale = Vector2(0.2, 0.2)
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_q2nd6")

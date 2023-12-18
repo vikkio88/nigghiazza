@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cu3op8i4013cp"]
+[gd_scene load_steps=16 format=3 uid="uid://cu3op8i4013cp"]
 
 [ext_resource type="Script" path="res://actors/items/weapons/pistol.gd" id="1_gso8s"]
 [ext_resource type="Texture2D" uid="uid://btn8rx6i25npe" path="res://actors/items/img/pistol.png" id="2_fi28u"]
 [ext_resource type="AudioStream" uid="uid://debpckaiksgux" path="res://assets/sounds/pistolshot.wav" id="3_sqg4l"]
+[ext_resource type="AudioStream" uid="uid://b7tnfr3cwayrk" path="res://assets/sounds/pistolreload.wav" id="4_rpc76"]
+[ext_resource type="AudioStream" uid="uid://crcfg5m74fhju" path="res://assets/sounds/pistoldryfire.wav" id="5_5b75t"]
 
 [sub_resource type="Gradient" id="Gradient_l8imv"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 0.784314, 0.258824, 1)
@@ -118,11 +120,153 @@ _data = {
 "shoot": SubResource("Animation_j0mq2")
 }
 
+[sub_resource type="Animation" id="Animation_njtsl"]
+resource_name = "inspect"
+length = 1.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9, 1.5),
+"transitions": PackedFloat32Array(0.353553, 2.14355, 1),
+"update": 0,
+"values": [0.0, 1.5708, 3.48787e-16]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_finish_inspect"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_m31q7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("sprite:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("reload:playing")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_v1qkv"]
+resource_name = "reload"
+length = 2.8
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 2.3, 2.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, 0), Vector2(2.08165e-12, -5), Vector2(-3, -3.125), Vector2(2.08165e-12, 2.08165e-12)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1.5, 2.8),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0.0, 0.785398, 0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("reload:playing")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/3/type = "method"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(2.8),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"_finish_reload"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yyapf"]
+_data = {
+"RESET": SubResource("Animation_m31q7"),
+"inspect": SubResource("Animation_njtsl"),
+"reload": SubResource("Animation_v1qkv")
+}
+
 [node name="pistol" type="Node2D"]
 script = ExtResource("1_gso8s")
 
 [node name="sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.2, 0.2)
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_fi28u")
 
 [node name="muzzle" type="Node2D" parent="sprite"]
@@ -137,7 +281,7 @@ process_material = SubResource("ParticleProcessMaterial_1osv7")
 lifetime = 0.1
 one_shot = true
 
-[node name="anim" type="AnimationPlayer" parent="."]
+[node name="anim_shoot" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_xpkud")
 }
@@ -145,3 +289,14 @@ libraries = {
 [node name="shot" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_sqg4l")
 volume_db = -16.396
+
+[node name="anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_yyapf")
+}
+
+[node name="reload" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_rpc76")
+
+[node name="dry" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_5b75t")

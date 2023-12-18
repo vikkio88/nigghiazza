@@ -10,7 +10,7 @@ const BASE_SPEED: float = 100.0
 @onready var ftPh: Node2D = $ftPh
 
 func _ready() -> void:
-	pass
+	EventBus.player_event.connect(_on_player_event)
 
 
 func _physics_process(delta: float) -> void:
@@ -71,4 +71,6 @@ func can_sprint() -> bool:
 
 func can_shoot() -> bool:
 	return !is_sprinting()
-	
+
+func _on_player_event(message: String) ->void:
+	HudFactory.add_floating_text(message, ftPh)

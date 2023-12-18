@@ -9,6 +9,16 @@ const DROP_RANGE: int = 150
 var _is_dropping: bool = false
 var _to_pos: Vector2 = Vector2.ZERO
 
+@onready var Sprite: Sprite2D = $sprite
+@onready var Anim: AnimationPlayer = $Anim
+@onready var pickable_shader = preload("res://actors/items/pickables/pickable.gdshader")
+
+
+func _ready() -> void:
+	Sprite.material = ShaderMaterial.new()
+	Sprite.material.shader = pickable_shader
+	Anim.play("glow")
+
 func init(position: Vector2, dropping:bool = false, ammo: int = 0) -> void:
 	_is_dropping = dropping
 	Ammo = ammo
@@ -44,3 +54,9 @@ func _on_playerdetector_area_exited(area: Area2D) -> void:
 		return
 		
 	EventBus.interactable_off.emit()
+	
+func glow_on():
+	Sprite.material.set_shader_parameter("active", false)
+	
+func glow_off():
+	Sprite.material.set_shader_parameter("active", true)

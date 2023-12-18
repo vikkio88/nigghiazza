@@ -1,8 +1,34 @@
-[gd_scene load_steps=3 format=3 uid="uid://iaq2bvs7in8t"]
+[gd_scene load_steps=5 format=3 uid="uid://iaq2bvs7in8t"]
 
 [ext_resource type="Script" path="res://actors/items/pickables/weapon_pickable.gd" id="1_qr00n"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mvggd"]
+
+[sub_resource type="Animation" id="Animation_dmnij"]
+resource_name = "glow"
+loop_mode = 1
+tracks/0/type = "method"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [],
+"method": &"glow_on"
+}, {
+"args": [],
+"method": &"glow_off"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_isi23"]
+_data = {
+"glow": SubResource("Animation_dmnij")
+}
 
 [node name="weapon" type="Node2D"]
 script = ExtResource("1_qr00n")
@@ -12,6 +38,11 @@ collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="playerdetector"]
 shape = SubResource("CircleShape2D_mvggd")
+
+[node name="Anim" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_isi23")
+}
 
 [connection signal="area_entered" from="playerdetector" to="." method="_on_playerdetector_area_entered"]
 [connection signal="area_exited" from="playerdetector" to="." method="_on_playerdetector_area_exited"]

@@ -25,8 +25,9 @@ func _on_interactable(item: String, action: String, callback: Callable):
 	intereactable_callback = callback
 
 
-func _off_interactable():
+func _off_interactable() -> void:
 	interaction.text = ""
 	action_key.visible = false
 	can_interact = false
 	intereactable_callback = func(): pass
+
