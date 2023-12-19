@@ -32,3 +32,20 @@ offset_bottom = 44.0
 text = "sadasdasdada"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="hp_bar" type="ProgressBar" parent="."]
+modulate = Color(1, 0, 0, 1)
+offset_right = 201.0
+offset_bottom = 9.0
+value = 20.0
+rounded = true
+show_percentage = false
+
+[node name="stamina_bar" type="ProgressBar" parent="."]
+modulate = Color(0, 1, 0, 1)
+offset_top = 9.0
+offset_right = 201.0
+offset_bottom = 15.0
+value = 20.0
+rounded = true
+show_percentage = false
