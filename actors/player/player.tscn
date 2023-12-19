@@ -105,3 +105,8 @@ shape = SubResource("CircleShape2D_4v2pf")
 [node name="footstep" type="AudioStreamPlayer2D" parent="."]
 scale = Vector2(0.5, 0.5)
 stream = ExtResource("3_w1ubu")
+
+[node name="tick" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="tick" to="." method="_on_tick_timeout"]

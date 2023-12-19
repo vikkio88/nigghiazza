@@ -1,7 +1,46 @@
 extends CharacterBody2D
 
+var Max_Health: int = 100
+var _health: int = Max_Health
+var Health: int = _health:
+	set = _set_health,
+	get = _get_health
+
+
+func _set_health(value: int):
+	_health = clampi(value, 0, Max_Health)
+
+	if _health == 0:
+		EventBus.game_over.emit()
+
+
+func _get_health():
+	return _health
+
+
+var _out_of_stamina = false
+var Max_Stamina: int = 100
+var _stamina: int = Max_Stamina
+var Stamina: int = _stamina:
+	set = _set_stamina,
+	get = _get_stamina
+
+
+func _set_stamina(value: int):
+	_stamina = clampi(value, 0, Max_Stamina)
+	if _stamina > SPRINT_MAX_COST:
+		_out_of_stamina = false
+	if _stamina == 0:
+		EventBus.player_event.emit("Out of Stamina")
+		_out_of_stamina = true
+
+
+func _get_stamina() -> int:
+	return _stamina
+
 
 const BASE_SPEED: float = 100.0
+const SPRINT_MAX_COST: int = 15
 @onready var sprite: Sprite2D = $sprite
 @onready var anim: AnimationPlayer = $anim
 @onready var footstep: AudioStreamPlayer2D = $footstep
@@ -11,6 +50,7 @@ const BASE_SPEED: float = 100.0
 
 func _ready() -> void:
 	EventBus.player_event.connect(_on_player_event)
+	emit_health_update()
 
 
 func _physics_process(delta: float) -> void:
@@ -29,8 +69,6 @@ func move() -> void:
 		anim.speed_scale = speed / BASE_SPEED
 		anim.play("move")
 		footstep.set_pitch_scale(randf_range(1.0, 2.3))
-		
-		# TODO: add draining stamina
 	else:
 		anim.play("RESET")
 		
@@ -51,11 +89,14 @@ func actions():
 		HudFactory.add_floating_critical("action_b", ftPh)
 
 func get_speed()  -> float:
-	var sprinting_now =  is_sprinting()
+	var sprinting_now =  is_sprinting() and !_out_of_stamina
 	var speed = (BASE_SPEED * (2 if sprinting_now else 1))
 	
 	if Input.is_action_pressed("ads"):
 		speed *= .2
+	
+	if sprinting_now:
+		Utils.gated_timer("player_consuming_stamina", 1, consume_stamina)
 	
 	return speed
 
@@ -74,3 +115,19 @@ func can_shoot() -> bool:
 
 func _on_player_event(message: String) ->void:
 	HudFactory.add_floating_text(message, ftPh)
+
+func emit_health_update():
+	EventBus.player_health_update.emit(Health, Max_Health, Stamina, Max_Stamina)
+	
+func consume_stamina() -> void:
+	Stamina -= Dice.roll(SPRINT_MAX_COST, SPRINT_MAX_COST/2)
+	emit_health_update()
+
+func recover():
+	if not is_sprinting() and not Utils.get_gate_by_name("player_consuming_stamina"):
+		Stamina += Dice.roll(SPRINT_MAX_COST)
+		emit_health_update()
+
+
+func _on_tick_timeout() -> void:
+	recover()
