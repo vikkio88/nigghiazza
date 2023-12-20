@@ -1,6 +1,7 @@
 extends Node2D
 
 @onready var gun: Node2D = null
+@onready var Player: Node2D = $".."
 
 const HIP_X: int = 2
 var hip_position: Vector2 = Vector2(HIP_X, 0)
@@ -54,7 +55,10 @@ func pick_gun(type: Enums.Weapons, ammo: int) -> void:
 	add_child(weapon)
 	gun = weapon
 
+	Player.modify_weight(weapon.Weight)
+
 func drop_gun():
+	Player.modify_weight(-gun.Weight)
 	EventBus.gun_dropped.emit(gun.Type, global_position, gun._ammo)
 	gun.queue_free()
 	gun = null

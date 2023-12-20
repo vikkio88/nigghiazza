@@ -1,22 +1,31 @@
 extends CharacterBody2D
 
+#region Consts
+const BASE_WEIGHT: float = 80.0
+const BASE_SPEED: float = 100.0
+const SPRINT_MAX_COST: int = 15
+#endregion
+
+#region Props
+var Weight: float = BASE_WEIGHT
+func modify_weight(value: float) -> void:
+	Weight = clampf(Weight + value, BASE_WEIGHT, Weight + value)
+	print("weight {0}".format([Weight]))
+
+
 var Max_Health: int = 100
 var _health: int = Max_Health
 var Health: int = _health:
 	set = _set_health,
 	get = _get_health
 
-
 func _set_health(value: int):
 	_health = clampi(value, 0, Max_Health)
-
 	if _health == 0:
 		EventBus.game_over.emit()
 
-
 func _get_health():
 	return _health
-
 
 var _out_of_stamina = false
 var Max_Stamina: int = 100
@@ -24,8 +33,6 @@ var _stamina: int = Max_Stamina
 var Stamina: int = _stamina:
 	set = _set_stamina,
 	get = _get_stamina
-
-
 func _set_stamina(value: int):
 	_stamina = clampi(value, 0, Max_Stamina)
 	if _stamina > SPRINT_MAX_COST:
@@ -33,14 +40,10 @@ func _set_stamina(value: int):
 	if _stamina == 0:
 		EventBus.player_event.emit("Out of Stamina")
 		_out_of_stamina = true
-
-
 func _get_stamina() -> int:
 	return _stamina
+#endregion
 
-
-const BASE_SPEED: float = 100.0
-const SPRINT_MAX_COST: int = 15
 @onready var sprite: Sprite2D = $sprite
 @onready var anim: AnimationPlayer = $anim
 @onready var footstep: AudioStreamPlayer2D = $footstep

@@ -19,6 +19,7 @@ var Base_Damage: float = 80.0
 var Recoil_Multiplier: Vector2 = Vector2(4.0, 15.0)
 var Max_Ammo: int = 5
 var BPM: float = 1.0
+var Weight: float = 3
 
 var _ammo: int = 5
 var _is_aiming: bool = false
