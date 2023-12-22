@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cdai2gss1lsu6"]
+[gd_scene load_steps=10 format=3 uid="uid://cdai2gss1lsu6"]
 
 [ext_resource type="PackedScene" uid="uid://6kayd1ghj20y" path="res://actors/player/player.tscn" id="1_4arqk"]
 [ext_resource type="Script" path="res://levels/TestLevel.gd" id="1_xh1ul"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://n4xw3vnwyyyi" path="res://hud/Hud.tscn" id="2_f6t6v"]
 [ext_resource type="PackedScene" uid="uid://mr6f5tlr1j8l" path="res://actors/items/pickables/m4_pickable.tscn" id="3_fhmop"]
 [ext_resource type="PackedScene" uid="uid://ca5mpesux85t8" path="res://actors/items/pickables/pistol_pickable.tscn" id="5_saewu"]
+[ext_resource type="PackedScene" uid="uid://cgy4d1haw5tu8" path="res://actors/enemies/dummy/dummy.tscn" id="7_jm8yg"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_namha"]
 texture = ExtResource("2_am7n2")
@@ -1433,3 +1434,7 @@ position = Vector2(214, 125)
 [node name="Hud" parent="player" instance=ExtResource("2_f6t6v")]
 
 [node name="Camera2D" type="Camera2D" parent="player"]
+
+[node name="dummy" parent="." instance=ExtResource("7_jm8yg")]
+position = Vector2(659, 109)
+scale = Vector2(1, 1)

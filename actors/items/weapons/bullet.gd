@@ -39,3 +39,16 @@ func _physics_process(delta: float) -> void:
 
 func destroy():
 	queue_free()
+
+
+func _on_area_body_entered(body: Node2D) -> void:
+	set_freeze_enabled(true)
+	if body.has_method("hit"):
+		body.hit(global_position, _base_dmg)
+		#var hole = hole_scene.instantiate()
+		#body.add_hole(hole)
+		#if _hit_point == Vector2.ZERO:
+			#hole.global_position = global_position
+		#else:
+			#hole.global_position = _hit_point
+	destroy()
