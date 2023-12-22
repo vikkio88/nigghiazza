@@ -3,7 +3,9 @@ extends CharacterBody2D
 #region Consts
 const BASE_WEIGHT: float = 80.0
 const BASE_SPEED: float = 100.0
-const SPRINT_MAX_COST: int = 15
+const SPRINT_BASE_COST: int = 15
+const SPEED_DECREASE_FACTOR: float = 5.6
+const STAMINA_WEIGHT_FACTOR: float = -11.2
 #endregion
 
 #region Props
@@ -35,7 +37,7 @@ var Stamina: int = _stamina:
 	get = _get_stamina
 func _set_stamina(value: int):
 	_stamina = clampi(value, 0, Max_Stamina)
-	if _stamina > SPRINT_MAX_COST:
+	if _stamina > SPRINT_BASE_COST:
 		_out_of_stamina = false
 	if _stamina == 0:
 		EventBus.player_event.emit("Out of Stamina")
@@ -44,13 +46,16 @@ func _get_stamina() -> int:
 	return _stamina
 #endregion
 
+#region Nodes
 @onready var sprite: Sprite2D = $sprite
 @onready var anim: AnimationPlayer = $anim
 @onready var footstep: AudioStreamPlayer2D = $footstep
 @onready var hand: Node2D = $hand
 # Floating Text Placeolder
 @onready var ftPh: Node2D = $ftPh
+#endregion
 
+#region Lifetimes
 func _ready() -> void:
 	EventBus.player_event.connect(_on_player_event)
 	emit_health_update()
@@ -59,10 +64,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	move()
 	actions()
-	
-#	if hand.has_gun():
-#		print("gun")
-	
+#endregion
+
+#region Actions
 func move() -> void:
 	var direction = Input.get_vector("left", "right", "up", "down")
 	var speed = get_speed()
@@ -91,9 +95,24 @@ func actions():
 	if Input.is_action_just_pressed("action_b"):
 		HudFactory.add_floating_critical("action_b", ftPh)
 
+func consume_stamina() -> void:
+	var cost = SPRINT_BASE_COST * pow(BASE_WEIGHT / Weight, STAMINA_WEIGHT_FACTOR)
+	Stamina -= cost
+	emit_health_update()
+
+func recover():
+	if not is_sprinting() and not Utils.get_gate_by_name("player_consuming_stamina"):
+		Stamina += Dice.roll(SPRINT_BASE_COST)
+		emit_health_update()
+
+
+#endregion 
+
+#region CalculatedProps
 func get_speed()  -> float:
+	var base = BASE_SPEED * pow(BASE_WEIGHT / Weight, SPEED_DECREASE_FACTOR)
 	var sprinting_now =  is_sprinting() and !_out_of_stamina
-	var speed = (BASE_SPEED * (2 if sprinting_now else 1))
+	var speed = (base * (2 if sprinting_now else 1))
 	
 	if Input.is_action_pressed("ads"):
 		speed *= .2
@@ -116,21 +135,16 @@ func can_sprint() -> bool:
 func can_shoot() -> bool:
 	return !is_sprinting()
 
+#endregion 
+
+#region Signals Handling
+func _on_tick_timeout() -> void:
+	recover()
+
 func _on_player_event(message: String) ->void:
 	HudFactory.add_floating_text(message, ftPh)
 
 func emit_health_update():
 	EventBus.player_health_update.emit(Health, Max_Health, Stamina, Max_Stamina)
-	
-func consume_stamina() -> void:
-	Stamina -= Dice.roll(SPRINT_MAX_COST, SPRINT_MAX_COST/2)
-	emit_health_update()
 
-func recover():
-	if not is_sprinting() and not Utils.get_gate_by_name("player_consuming_stamina"):
-		Stamina += Dice.roll(SPRINT_MAX_COST)
-		emit_health_update()
-
-
-func _on_tick_timeout() -> void:
-	recover()
+#endregion
